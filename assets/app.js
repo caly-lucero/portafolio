@@ -13,7 +13,11 @@
     return n;
   }
   function pad2(n) { return n < 10 ? "0" + n : String(n); }
-  function pad4(n) { return String(Math.max(0, Math.round(n))).padStart(4, "0"); }
+  // Dirección que se muestra en la barra del navegador del marco (sin "https://" ni parámetros)
+  function direccionVisible(demo) {
+    if (/^https?:\/\//.test(demo)) return demo.replace(/^https?:\/\//, "").split("?")[0].replace(/\/$/, "");
+    return location.host + location.pathname.replace(/\/$/, "") + "/" + demo.split("?")[0];
+  }
 
   /* ---------- Tema plano / papel ---------- */
   var temaBtn = $("#tema");
@@ -25,26 +29,6 @@
     try { localStorage.setItem("tema", root.dataset.tema); } catch (e) {}
     syncMeta();
   });
-
-  /* ---------- Mira del cursor + coordenadas ---------- */
-  if (finePointer && !reduce) {
-    var cx = $(".cx"), cy = $(".cy"), coords = $("#coords");
-    var px = 0, py = 0, raf = 0;
-    var draw = function () {
-      raf = 0;
-      cx.style.transform = "translateX(" + px + "px)";
-      cy.style.transform = "translateY(" + py + "px)";
-      coords.textContent = "X " + pad4(px + window.scrollX) + " · Y " + pad4(py + window.scrollY);
-    };
-    var queue = function () { if (!raf) raf = requestAnimationFrame(draw); };
-    window.addEventListener("pointermove", function (e) {
-      px = e.clientX; py = e.clientY;
-      cx.classList.add("on"); cy.classList.add("on");
-      queue();
-    }, { passive: true });
-    window.addEventListener("scroll", queue, { passive: true });
-    document.addEventListener("pointerleave", function () { cx.classList.remove("on"); cy.classList.remove("on"); });
-  }
 
   /* ---------- Láminas ---------- */
   var proyectos = window.PROYECTOS || [];
@@ -84,7 +68,7 @@
     var wrap = el("div", "wrap");
     var device = el("div", "device");
     var bar = el("div", "bar");
-    bar.append(el("i"), el("i"), el("i"), el("span", null, location.host + location.pathname.replace(/\/$/, "") + "/" + p.demo));
+    bar.append(el("i"), el("i"), el("i"), el("span", null, direccionVisible(p.demo)));
     var vp = el("div", "viewport");
     var screen = el("div", "screen");
     var iframe = document.createElement("iframe");

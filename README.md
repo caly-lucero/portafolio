@@ -8,6 +8,11 @@ Estética de plano técnico: cada proyecto es una "lámina" con la demo en vivo 
 1. Copiar la demo a `demos/<nombre>/index.html`.
 2. Sumar un objeto a la lista en `assets/proyectos.js` (id, titulo, tipo, descripcion, stack, demo, embed, estado y los tamaños de `pantallas`).
 
+## Marca personal
+- **Logo:** nombre "Caly Lucero" en Bricolage Grotesque ExtraBold con una línea de cota (referencia al plano) debajo. **Monograma:** "CL" con la misma cota. Colores: azul `#0a1a2f`, hielo `#e6f0ff`, amarillo `#ffd23f` (y rojo `#d4380d` sobre fondo claro).
+- **Tipografías (licencia OFL):** Bricolage Grotesque para títulos y JetBrains Mono para anotaciones.
+- **Archivos:** `assets/marca/` (SVG y PNG). Se regeneran con `marca-src/generar-marca.js` (letras convertidas a curvas, sin depender de fuentes instaladas).
+
 ## Ver en local
 ```
 python -m http.server 8000
