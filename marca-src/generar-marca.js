@@ -75,14 +75,31 @@ function textoCentrado(font, t, size, cx, cy, spacing) {
 const cota = (x1, x2, y, alto, grosor, color) =>
   `<path d="M${x1} ${y}H${x2}M${x1} ${y - alto / 2}V${y + alto / 2}M${x2} ${y - alto / 2}V${y + alto / 2}" fill="none" stroke="${color}" stroke-width="${grosor}" stroke-linecap="butt"/>`;
 
-/* ---------- Monograma "CL" ---------- */
-function monograma(redondeo) {
-  const m = texto(brico, "CL", 100, 0, 0, -0.01);
-  const size = 100 * 50 / m.h;                       // letras de ~50 unidades de alto
-  const t = textoCentrado(brico, "CL", size, 60, 50, -0.01);
+/* ---------- Monograma "CL": la C y la L hacen de ojos y la línea amarilla es una sonrisa sutil ---------- */
+const rr = (v) => Math.round(v * 100) / 100;
+// Una letra sola, de alto "alto", centrada en (cx, cy)
+function letraSola(ch, alto, cx, cy) {
+  const g = brico.charToGlyph(ch);
+  let p = g.getPath(0, 0, 100); let bb = p.getBoundingBox();
+  p = g.getPath(0, 0, 100 * alto / (bb.y2 - bb.y1)); bb = p.getBoundingBox();
+  mover(p, cx - (bb.x1 + bb.x2) / 2, cy - (bb.y1 + bb.y2) / 2);
+  return aTexto(p);
+}
+// Sonrisa: arco suave con topes en las puntas (como una línea de cota). "caida" = cuánto baja el centro del arco.
+function sonrisa(x1, x2, y, caida, grosor, tope, color) {
+  const cx = (x1 + x2) / 2, cy = y + caida * 2;      // en una curva cuadrática el punto de control va al doble
+  const t = (px, py, tx, ty) => {
+    const l = Math.hypot(tx, ty), nx = -ty / l, ny = tx / l, m = tope / 2;
+    return `M${rr(px - nx * m)} ${rr(py - ny * m)}L${rr(px + nx * m)} ${rr(py + ny * m)}`;
+  };
+  return `<path d="M${x1} ${y}Q${cx} ${cy} ${x2} ${y}${t(x1, y, cx - x1, cy - y)}${t(x2, y, x2 - cx, y - cy)}" fill="none" stroke="${color}" stroke-width="${grosor}" stroke-linecap="round" stroke-linejoin="round"/>`;
+}
+function monograma(redondeo, caida) {
+  const c = letraSola("C", 38, 40, 45), l = letraSola("L", 38, 80, 45);
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">` +
     `<title>Caly Lucero</title><rect width="120" height="120" rx="${redondeo}" fill="${NAVY}"/>` +
-    `<path d="${t.d}" fill="${HIELO}"/>${cota(27, 93, 93, 13, 3.6, AMARILLO)}</svg>`;
+    `<path d="${c}" fill="${HIELO}"/><path d="${l}" fill="${HIELO}"/>` +
+    sonrisa(36, 84, 83, caida == null ? 4.5 : caida, 5, 12, AMARILLO) + `</svg>`;
 }
 
 /* ---------- Logo horizontal ---------- */
@@ -117,6 +134,20 @@ const escribir = (n, s) => {
 };
 const png = (svg, ancho) => new Resvg(svg, { fitTo: { mode: "width", value: ancho } }).render().asPng();
 
+// Prueba opcional: node generar-marca.js <base> <salida> prueba  -> hoja con tres intensidades de sonrisa
+if (process.argv[4] === "prueba") {
+  const niveles = [3, 4.5, 6];
+  let hoja = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520"><rect width="100%" height="100%" fill="#e6e4dc"/>`;
+  niveles.forEach((n, i) => {
+    const inner = monograma(27, n).replace(/<svg[^>]*>/, "").replace("</svg>", "");
+    hoja += `<g transform="translate(${60 + i * 380} 50) scale(2.9)">${inner}</g>`;
+    [64, 32, 20].forEach((t, j) => { hoja += `<g transform="translate(${60 + i * 380 + [0, 90, 150][j]} 420) scale(${t / 120})">${inner}</g>`; });
+  });
+  hoja += "</svg>";
+  fs.writeFileSync(path.join(out, "sonrisa-prueba.png"), new Resvg(hoja, { fitTo: { mode: "width", value: 1200 } }).render().asPng());
+  console.log("hoja de prueba lista");
+  process.exit(0);
+}
 const svgMono = monograma(27), svgMonoCuadrado = monograma(0);
 const svgClaro = logo(HIELO, AMARILLO), svgOscuro = logo(NAVY, ROJO), svgOg = og();
 for (const [n, s] of [["og", svgOg], ["monograma-cuadrado", svgMonoCuadrado]]) {
