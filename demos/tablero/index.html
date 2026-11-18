@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tablero de ventas · demo con datos ficticios</title>
+<style>
+  :root {
+    color-scheme: light;
+    --surface-1: #fcfcfb; --surface-2: #f2f1ee; --line: #dedcd6;
+    --text-1: #0b0b0b; --text-2: #52514e; --text-3: #76746f;
+    --series-1: #2a78d6; --good: #0f7a46; --bad: #c2362f;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --surface-1: #1a1a19; --surface-2: #252523; --line: #3a3a37;
+      --text-1: #f0efec; --text-2: #c3c2b7; --text-3: #a09f95;
+      --series-1: #3987e5; --good: #4cc38a; --bad: #ee7b74;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--surface-1); color: var(--text-1); font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .app { padding: 14px 14px 20px; max-width: 1180px; margin: 0 auto; }
+  header { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+  h1 { margin: 0; font-size: 18px; letter-spacing: -.01em; }
+  .aviso { margin: 2px 0 0; color: var(--text-3); font-size: 12px; }
+  .rubros { display: flex; gap: 6px; flex-wrap: wrap; }
+  button { font: inherit; color: inherit; }
+  .rubros button, .rango button, .vista button {
+    border: 1px solid var(--line); background: transparent; border-radius: 999px; padding: 5px 12px; cursor: pointer; font-size: 13px;
+  }
+  button[aria-pressed="true"] { background: var(--series-1); border-color: var(--series-1); color: #fff; }
+  .filtros { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; padding: 10px 0 12px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-bottom: 12px; }
+  .filtros label { display: flex; align-items: center; gap: 6px; color: var(--text-2); font-size: 12px; }
+  select { font: inherit; font-size: 13px; color: var(--text-1); background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px; padding: 5px 8px; max-width: 150px; }
+  .rango { display: flex; gap: 4px; margin-left: auto; }
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 12px; }
+  .kpi { background: var(--surface-2); border-radius: 10px; padding: 10px 12px; min-width: 0; }
+  .kpi small { display: block; color: var(--text-2); font-size: 12px; }
+  .kpi b { display: block; font-size: 22px; letter-spacing: -.02em; line-height: 1.2; margin-top: 2px; white-space: nowrap; }
+  .kpi .delta { font-size: 12px; font-weight: 600; }
+  .delta.up { color: var(--good); } .delta.down { color: var(--bad); } .delta.flat { color: var(--text-3); }
+  .panel { border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px 14px; margin-bottom: 12px; position: relative; }
+  .panel h2 { margin: 0; font-size: 14px; }
+  .panel .sub { margin: 0 0 10px; color: var(--text-3); font-size: 12px; }
+  .panel-head { display: flex; justify-content: space-between; align-items: start; gap: 8px; }
+  .vista button { padding: 3px 10px; font-size: 12px; }
+  /* gráfico de columnas */
+  .plot { position: relative; height: 190px; margin-left: 44px; }
+  .grid { position: absolute; left: 0; right: 0; border-top: 1px solid var(--line); }
+  .grid span { position: absolute; left: -44px; top: -8px; width: 38px; text-align: right; font-size: 11px; color: var(--text-3); }
+  .cols { position: absolute; inset: 0; display: flex; align-items: flex-end; gap: 4px; }
+  .col { flex: 1; height: 100%; display: flex; align-items: flex-end; border: 0; background: none; padding: 0; cursor: pointer; min-width: 0; }
+  .col i { display: block; width: 100%; background: var(--series-1); border-radius: 4px 4px 0 0; transition: opacity .12s; min-height: 2px; }
+  .cols:hover .col:not(:hover) i, .cols:focus-within .col:not(:focus) i { opacity: .38; }
+  .col:focus-visible { outline: 2px solid var(--text-1); outline-offset: 1px; }
+  .meses { display: flex; gap: 4px; margin: 6px 0 0 44px; }
+  .meses span { flex: 1; text-align: center; font-size: 11px; color: var(--text-3); min-width: 0; }
+  .tip { position: absolute; z-index: 5; pointer-events: none; background: var(--text-1); color: var(--surface-1); border-radius: 8px; padding: 7px 10px; font-size: 12px; line-height: 1.4; white-space: nowrap; display: none; }
+  .tip b { display: block; font-size: 13px; }
+  .max-lbl { position: absolute; font-size: 11px; font-weight: 600; transform: translate(-50%, -100%); white-space: nowrap; pointer-events: none; }
+  /* barras horizontales */
+  .dos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .dos .panel { margin-bottom: 0; }
+  .fila { display: grid; grid-template-columns: minmax(70px, 120px) 1fr auto; gap: 8px; align-items: center; padding: 3px 0; border: 0; background: none; width: 100%; text-align: left; cursor: pointer; border-radius: 6px; }
+  .fila:hover, .fila:focus-visible { background: var(--surface-2); outline: none; }
+  .fila .n { color: var(--text-2); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .fila .tr { height: 12px; }
+  .fila .tr i { display: block; height: 100%; background: var(--series-1); border-radius: 0 4px 4px 0; min-width: 2px; }
+  .fila .v { font-size: 13px; font-variant-numeric: tabular-nums; }
+  .fila.sel .n { color: var(--text-1); font-weight: 700; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+  th, td { text-align: right; padding: 5px 6px; border-bottom: 1px solid var(--line); }
+  th:first-child, td:first-child { text-align: left; }
+  th { color: var(--text-2); font-weight: 600; font-size: 12px; }
+  [hidden] { display: none !important; }
+  footer { color: var(--text-3); font-size: 11px; margin-top: 10px; }
+  @media (max-width: 720px) {
+    .kpis { grid-template-columns: repeat(2, 1fr); }
+    .dos { grid-template-columns: 1fr; }
+    .rango { margin-left: 0; }
+    .meses span { font-size: 10px; }
+    .plot { height: 160px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div>
+      <h1>Tablero de ventas</h1>
+      <p class="aviso">Demo con datos ficticios generados en el navegador. Cambiá el rubro, los filtros y tocá las barras.</p>
+    </div>
+    <div class="rubros" role="group" aria-label="Rubro del ejemplo" id="rubros"></div>
+  </header>
+
+  <div class="filtros">
+    <label>Categoría <select id="fCat"></select></label>
+    <label><span id="lVend">Vendedor</span> <select id="fVend"></select></label>
+    <div class="rango" role="group" aria-label="Período" id="rango"></div>
+  </div>
+
+  <div class="kpis" id="kpis"></div>
+
+  <section class="panel" id="pMeses">
+    <div class="panel-head">
+      <div><h2 id="tMeses">Ventas por mes</h2><p class="sub" id="sMeses"></p></div>
+      <div class="vista" role="group" aria-label="Forma de ver">
+        <button type="button" id="vGraf" aria-pressed="true">Gráfico</button>
+        <button type="button" id="vTabla" aria-pressed="false">Tabla</button>
+      </div>
+    </div>
+    <div id="graf">
+      <div class="plot" id="plot"></div>
+      <div class="meses" id="meses"></div>
+    </div>
+    <div id="tabla" hidden></div>
+    <div class="tip" id="tip" role="status"></div>
+  </section>
+
+  <div class="dos">
+    <section class="panel"><h2 id="tVend">Ranking</h2><p class="sub">Tocá una fila para filtrar todo el tablero.</p><div id="rVend"></div></section>
+    <section class="panel"><h2>Mix por categoría</h2><p class="sub">Participación sobre el total del período.</p><div id="rCat"></div></section>
+  </div>
+  <footer>Los números no son de ninguna empresa real. Los genera un programa con una semilla fija: siempre dan lo mismo.</footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+
+  var RUBROS = {
+    distribuidora: {
+      nombre: "Distribuidora", moneda: "$", escala: 1, vend: "Vendedor", oper: "pedidos", cliente: "Clientes con compra", ticket: "Ticket promedio",
+      cats: ["Cervezas", "Gaseosas", "Aguas y jugos", "Vinos", "Snacks"], pesos: [0.36, 0.28, 0.14, 0.12, 0.10],
+      vendedores: ["Lucía R.", "Martín G.", "Sofía P.", "Diego A.", "Camila F.", "Nicolás B."],
+      semilla: 11, mediaOrden: 210000, ordenesMes: 7, clientes: 120,
+      temporada: [1.08, 1.0, 0.95, 0.92, 0.9, 0.94, 0.96, 0.97, 1.0, 1.04, 1.1, 1.22]
+    },
+    comercio: {
+      nombre: "Comercio", moneda: "$", escala: 1, vend: "Vendedor", oper: "tickets", cliente: "Clientes con compra", ticket: "Ticket promedio",
+      cats: ["Indumentaria", "Calzado", "Accesorios", "Hogar", "Regalos"], pesos: [0.34, 0.24, 0.16, 0.14, 0.12],
+      vendedores: ["Valeria S.", "Tomás H.", "Julieta M.", "Agustín L."],
+      semilla: 29, mediaOrden: 48000, ordenesMes: 16, clientes: 260,
+      temporada: [0.92, 0.88, 0.95, 1.0, 1.02, 0.98, 1.1, 0.96, 0.98, 1.04, 1.12, 1.35]
+    },
+    inmobiliaria: {
+      nombre: "Inmobiliaria", moneda: "US$", escala: 1, vend: "Asesor", oper: "operaciones", cliente: "Clientes que cerraron", ticket: "Valor promedio",
+      cats: ["Departamentos", "Casas", "Terrenos", "Locales", "Alquileres"], pesos: [0.42, 0.26, 0.14, 0.08, 0.10],
+      vendedores: ["Florencia D.", "Ignacio T.", "Mariana C.", "Pablo V."],
+      semilla: 47, mediaOrden: 62000, ordenesMes: 2, clientes: 70,
+      temporada: [0.8, 0.85, 1.05, 1.1, 1.08, 0.98, 0.9, 1.0, 1.12, 1.15, 1.08, 0.95]
+    }
+  };
+
+  var MESES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+  var NMESES = 24;
+  var fmtN = new Intl.NumberFormat("es-AR", { maximumFractionDigits: 0 });
+
+  function rng(seed) {                       // generador con semilla fija (mulberry32)
+    var a = seed >>> 0;
+    return function () {
+      a += 0x6D2B79F5; var t = a;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  // Los 24 meses terminan en el último mes completo
+  var hoy = new Date();
+  var base = new Date(hoy.getFullYear(), hoy.getMonth() - NMESES, 1);
+  var etiquetas = [];
+  for (var i = 0; i < NMESES; i++) {
+    var d = new Date(base.getFullYear(), base.getMonth() + i, 1);
+    etiquetas.push({ mes: d.getMonth(), anio: d.getFullYear() });
+  }
+
+  function generar(r) {
+    // filas: [mes, vendedor, categoría, cliente, importe]
+    var rand = rng(r.semilla), filas = [];
+    var nv = r.vendedores.length;
+    var fuerza = r.vendedores.map(function () { return 0.75 + rand() * 0.6; });
+    for (var m = 0; m < NMESES; m++) {
+      var crec = 1 + 0.012 * m;
+      var temp = r.temporada[etiquetas[m].mes];
+      for (var v = 0; v < nv; v++) {
+        var n = Math.max(1, Math.round(r.ordenesMes * fuerza[v] * (0.8 + rand() * 0.4)));
+        for (var k = 0; k < n; k++) {
+          var x = rand(), acum = 0, c = 0;
+          for (; c < r.pesos.length - 1; c++) { acum += r.pesos[c]; if (x < acum) break; }
+          var importe = r.mediaOrden * crec * temp * (0.4 + rand() * 1.2);
+          var cliente = 1 + Math.floor(Math.pow(rand(), 1.6) * r.clientes);
+          filas.push([m, v, c, cliente, Math.round(importe / 100) * 100]);
+        }
+      }
+    }
+    return filas;
+  }
+
+  var estado = { rubro: "distribuidora", cat: -1, vend: -1, rango: 3, vista: "graf" };
+  var datos = {};
+  function filas() { return datos[estado.rubro] || (datos[estado.rubro] = generar(RUBROS[estado.rubro])); }
+
+  function ok(f) {
+    return (estado.cat < 0 || f[2] === estado.cat) && (estado.vend < 0 || f[1] === estado.vend);
+  }
+  function dinero(r, n, corto) {
+    if (corto) {
+      if (n >= 1e6) return r.moneda + " " + (n / 1e6).toLocaleString("es-AR", { maximumFractionDigits: 1 }) + " M";
+      if (n >= 1e3) return r.moneda + " " + fmtN.format(n / 1e3) + " mil";
+    }
+    return r.moneda + " " + fmtN.format(n);
+  }
+  function pct(a, b) { return b ? (a - b) / b * 100 : null; }
+  function deltaHtml(p) {
+    if (p == null) return '<span class="delta flat">sin referencia</span>';
+    var cls = Math.abs(p) < 0.5 ? "flat" : p > 0 ? "up" : "down";
+    var flecha = cls === "flat" ? "=" : p > 0 ? "▲" : "▼";
+    return '<span class="delta ' + cls + '">' + flecha + " " + Math.abs(p).toLocaleString("es-AR", { maximumFractionDigits: 1 }) + "% vs. período anterior</span>";
+  }
+
+  function resumen(desde, hasta) {          // [desde, hasta) sobre los 24 meses
+    var tot = 0, ops = 0, cli = {};
+    filas().forEach(function (f) {
+      if (f[0] >= desde && f[0] < hasta && ok(f)) { tot += f[4]; ops++; cli[f[3]] = 1; }
+    });
+    return { tot: tot, ops: ops, cli: Object.keys(cli).length };
+  }
+
+  /* ---------- pintar ---------- */
+  function pintar() {
+    var r = RUBROS[estado.rubro];
+    var fin = NMESES, ini = fin - estado.rango, ant = ini - estado.rango;
+    var a = resumen(ini, fin), b = resumen(ant, ini);
+
+    $("kpis").innerHTML =
+      kpi("Ventas", dinero(r, a.tot, true), deltaHtml(pct(a.tot, b.tot))) +
+      kpi(r.ticket, dinero(r, a.ops ? a.tot / a.ops : 0, true), deltaHtml(pct(a.ops ? a.tot / a.ops : 0, b.ops ? b.tot / b.ops : 0))) +
+      kpi("Cantidad de " + r.oper, fmtN.format(a.ops), deltaHtml(pct(a.ops, b.ops))) +
+      kpi(r.cliente, fmtN.format(a.cli), deltaHtml(pct(a.cli, b.cli)));
+
+    // meses (últimos 12)
+    var serie = [], max = 0;
+    for (var m = NMESES - 12; m < NMESES; m++) {
+      var s = resumen(m, m + 1), sa = resumen(m - 12, m - 11);
+      serie.push({ m: m, v: s.tot, prev: sa.tot, ops: s.ops });
+      if (s.tot > max) max = s.tot;
+    }
+    var tope = nice(max);
+    $("tMeses").textContent = "Ventas por mes · últimos 12 meses";
+    $("sMeses").textContent = filtroTexto();
+    var plot = "";
+    [0, 0.5, 1].forEach(function (g) {
+      plot += '<div class="grid" style="bottom:' + (g * 100) + '%"><span>' + (g === 0 ? "0" : dinero(r, tope * g, true).replace(r.moneda + " ", "")) + "</span></div>";
+    });
+    var cols = "";
+    var imax = serie.reduce(function (p, c, i) { return c.v > serie[p].v ? i : p; }, 0);
+    serie.forEach(function (s, i) {
+      cols += '<button type="button" class="col" data-i="' + i + '" aria-label="' + nombreMes(s.m) + ": " + dinero(r, s.v) + '"><i style="height:' + (tope ? s.v / tope * 100 : 0) + '%"></i></button>';
+    });
+    $("plot").innerHTML = plot + '<div class="cols" id="cols">' + cols + "</div>";
+    var lbl = document.createElement("div");
+    lbl.className = "max-lbl";
+    lbl.style.left = ((imax + 0.5) / 12 * 100) + "%";
+    lbl.style.bottom = "calc(" + (tope ? serie[imax].v / tope * 100 : 0) + "% + 4px)";
+    lbl.textContent = "máx. " + dinero(r, serie[imax].v, true).replace(r.moneda + " ", "");
+    $("plot").appendChild(lbl);
+    $("meses").innerHTML = serie.map(function (s) { return "<span>" + MESES[etiquetas[s.m].mes] + "</span>"; }).join("");
+
+    var cl = $("cols");
+    Array.prototype.forEach.call(cl.querySelectorAll(".col"), function (c) {
+      var show = function () { tip(c, serie[+c.dataset.i], r); };
+      c.addEventListener("mouseenter", show); c.addEventListener("focus", show);
+      c.addEventListener("click", show);
+      c.addEventListener("mouseleave", ocultar); c.addEventListener("blur", ocultar);
+    });
+
+    // tabla alternativa
+    $("tabla").innerHTML = "<table><thead><tr><th>Mes</th><th>Ventas</th><th>Año anterior</th><th>Variación</th></tr></thead><tbody>" +
+      serie.map(function (s) {
+        var p = pct(s.v, s.prev);
+        return "<tr><td>" + nombreMes(s.m) + "</td><td>" + dinero(r, s.v) + "</td><td>" + dinero(r, s.prev) + "</td><td>" + (p == null ? "—" : (p > 0 ? "+" : "") + p.toLocaleString("es-AR", { maximumFractionDigits: 1 }) + "%") + "</td></tr>";
+      }).join("") + "</tbody></table>";
+
+    ranking("rVend", r.vendedores, 1, "vend", r, ini, fin);
+    ranking("rCat", r.cats, 2, "cat", r, ini, fin);
+    $("tVend").textContent = "Ranking de " + r.vend.toLowerCase() + (r.vend === "Vendedor" ? "es" : "es");
+  }
+
+  function kpi(t, v, d) { return '<div class="kpi"><small>' + t + "</small><b>" + v + "</b>" + d + "</div>"; }
+  function nombreMes(m) { var e = etiquetas[m]; return MESES[e.mes] + " " + e.anio; }
+  function nice(n) {
+    if (n <= 0) return 1;
+    var p = Math.pow(10, Math.floor(Math.log10(n))), x = n / p;
+    return (x <= 1 ? 1 : x <= 2 ? 2 : x <= 5 ? 5 : 10) * p;
+  }
+  function filtroTexto() {
+    var r = RUBROS[estado.rubro], t = [];
+    t.push(estado.cat < 0 ? "todas las categorías" : r.cats[estado.cat]);
+    t.push(estado.vend < 0 ? "todos los " + r.vend.toLowerCase() + "es" : r.vendedores[estado.vend]);
+    return t.join(" · ");
+  }
+
+  function ranking(dest, nombres, col, clave, r, ini, fin) {
+    var suma = nombres.map(function () { return 0; });
+    filas().forEach(function (f) {
+      if (f[0] < ini || f[0] >= fin) return;
+      // el ranking respeta el OTRO filtro, no el propio, para poder comparar
+      if (clave === "vend" && estado.cat >= 0 && f[2] !== estado.cat) return;
+      if (clave === "cat" && estado.vend >= 0 && f[1] !== estado.vend) return;
+      suma[f[col]] += f[4];
+    });
+    var tot = suma.reduce(function (p, c) { return p + c; }, 0), max = Math.max.apply(null, suma);
+    var orden = nombres.map(function (_, i) { return i; }).sort(function (x, y) { return suma[y] - suma[x]; });
+    $(dest).innerHTML = orden.map(function (i) {
+      var sel = estado[clave] === i;
+      return '<button type="button" class="fila' + (sel ? " sel" : "") + '" data-k="' + clave + '" data-i="' + i + '" aria-pressed="' + sel + '"><span class="n">' + nombres[i] + '</span><span class="tr"><i style="width:' + (max ? suma[i] / max * 100 : 0) + '%"></i></span><span class="v">' +
+        (clave === "cat" ? (tot ? Math.round(suma[i] / tot * 100) : 0) + "%" : dinero(r, suma[i], true)) + "</span></button>";
+    }).join("");
+  }
+
+  /* ---------- tooltip ---------- */
+  function tip(btn, s, r) {
+    var t = $("tip"), p = pct(s.v, s.prev);
+    t.innerHTML = "<b>" + nombreMes(s.m) + "</b>" + dinero(r, s.v) + "<br>" + fmtN.format(s.ops) + " " + r.oper +
+      "<br>" + (p == null ? "sin dato del año anterior" : (p > 0 ? "▲ +" : "▼ ") + p.toLocaleString("es-AR", { maximumFractionDigits: 1 }) + "% vs. mismo mes del año anterior");
+    t.style.display = "block";
+    var panel = $("pMeses").getBoundingClientRect(), b = btn.getBoundingClientRect();
+    var left = b.left - panel.left + b.width / 2 - t.offsetWidth / 2;
+    left = Math.max(6, Math.min(left, panel.width - t.offsetWidth - 6));
+    var top = b.top - panel.top - t.offsetHeight - 6;
+    t.style.left = left + "px"; t.style.top = Math.max(4, top) + "px";
+  }
+  function ocultar() { $("tip").style.display = "none"; }
+
+  /* ---------- controles ---------- */
+  function armarControles() {
+    var r = RUBROS[estado.rubro];
+    $("rubros").innerHTML = Object.keys(RUBROS).map(function (k) {
+      return '<button type="button" data-r="' + k + '" aria-pressed="' + (k === estado.rubro) + '">' + RUBROS[k].nombre + "</button>";
+    }).join("");
+    $("fCat").innerHTML = '<option value="-1">Todas</option>' + r.cats.map(function (c, i) { return '<option value="' + i + '">' + c + "</option>"; }).join("");
+    $("fVend").innerHTML = '<option value="-1">Todos</option>' + r.vendedores.map(function (c, i) { return '<option value="' + i + '">' + c + "</option>"; }).join("");
+    $("lVend").textContent = r.vend;
+    $("fCat").value = estado.cat; $("fVend").value = estado.vend;
+    $("rango").innerHTML = [[1, "Último mes"], [3, "3 meses"], [6, "6 meses"], [12, "12 meses"]].map(function (x) {
+      return '<button type="button" data-n="' + x[0] + '" aria-pressed="' + (x[0] === estado.rango) + '">' + x[1] + "</button>";
+    }).join("");
+  }
+
+  $("rubros").addEventListener("click", function (e) {
+    var b = e.target.closest("button"); if (!b) return;
+    estado.rubro = b.dataset.r; estado.cat = -1; estado.vend = -1; armarControles(); pintar();
+  });
+  $("rango").addEventListener("click", function (e) {
+    var b = e.target.closest("button"); if (!b) return;
+    estado.rango = +b.dataset.n; armarControles(); pintar();
+  });
+  $("fCat").addEventListener("change", function () { estado.cat = +this.value; pintar(); });
+  $("fVend").addEventListener("change", function () { estado.vend = +this.value; pintar(); });
+  function filtrarDesdeFila(e) {
+    var b = e.target.closest(".fila"); if (!b) return;
+    var k = b.dataset.k, i = +b.dataset.i;
+    estado[k] = estado[k] === i ? -1 : i;
+    $(k === "cat" ? "fCat" : "fVend").value = estado[k]; pintar();
+  }
+  $("rVend").addEventListener("click", filtrarDesdeFila);
+  $("rCat").addEventListener("click", filtrarDesdeFila);
+  function vista(v) {
+    estado.vista = v;
+    $("graf").hidden = v !== "graf"; $("tabla").hidden = v !== "tabla";
+    $("vGraf").setAttribute("aria-pressed", v === "graf"); $("vTabla").setAttribute("aria-pressed", v === "tabla");
+    ocultar();
+  }
+  $("vGraf").addEventListener("click", function () { vista("graf"); });
+  $("vTabla").addEventListener("click", function () { vista("tabla"); });
+
+  armarControles(); pintar();
+})();
+</script>
+</body>
+</html>

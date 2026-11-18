@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Caly Lucero · Portafolio</title>
-<meta name="description" content="Software a medida: apps web, PWAs y prototipos que podés probar en vivo.">
+<title>Caly Lucero · Reportes de ventas y apps a medida</title>
+<meta name="description" content="Analista de ventas que también programa: tableros y reportes de ventas para pymes, automatización de reportes y apps a medida. Hago el dato y la app, de punta a punta.">
 <meta name="theme-color" content="#0a1a2f">
 <link rel="canonical" href="https://caly-lucero.github.io/portafolio/">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="es_AR">
 <meta property="og:site_name" content="Caly Lucero">
 <meta property="og:url" content="https://caly-lucero.github.io/portafolio/">
-<meta property="og:title" content="Caly Lucero · Portafolio">
-<meta property="og:description" content="Software a medida: apps web, PWAs y prototipos que podés probar en vivo.">
+<meta property="og:title" content="Caly Lucero · Reportes de ventas y apps a medida">
+<meta property="og:description" content="Tableros y reportes de ventas para pymes, automatización de reportes y apps a medida. Pedí un diagnóstico gratis de tus ventas.">
 <meta property="og:image" content="https://caly-lucero.github.io/portafolio/assets/marca/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -23,7 +23,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=3">
+<link rel="stylesheet" href="assets/style.css?v=6">
+<script type="application/ld+json">
+{ "@context": "https://schema.org", "@type": "Person", "name": "Caly Lucero",
+  "jobTitle": "Analista de ventas y desarrollo de software a medida",
+  "url": "https://caly-lucero.github.io/portafolio/",
+  "sameAs": ["https://github.com/caly-lucero", "https://www.linkedin.com/in/claudio-lucero-14a63110b"] }
+</script>
 <script>
   document.documentElement.classList.add("js");
   try { var t = localStorage.getItem("tema"); if (t === "plano" || t === "papel") document.documentElement.dataset.tema = t; } catch (e) {}
@@ -35,32 +41,208 @@
     <img src="assets/marca/monograma.svg" width="30" height="30" alt="">
     <span>Caly Lucero</span>
   </a>
-  <button class="tema-btn" id="tema" type="button" aria-label="Cambiar entre plano y papel">
-    <span class="tema-on">Plano</span><span class="tema-off">Papel</span>
+  <div class="menu">
+    <a href="#servicios">Servicios</a>
+    <a href="#laminas">Proyectos</a>
+    <a href="#caso">Caso</a>
+    <a href="#piezas">Cómo funciona</a>
+    <a href="#sobre-mi">Sobre mí</a>
+    <a class="menu-cta" href="#contacto">Contacto</a>
+  </div>
+  <button class="tema-btn" id="tema" type="button" aria-label="Cambiar el estilo visual del sitio entre Plano (oscuro) y Papel (claro)" title="Estilo visual del sitio: Plano (oscuro) o Papel (claro)">
+    <span class="tema-lbl">Estilo</span><span class="tema-on">Plano</span><span class="tema-off">Papel</span>
   </button>
 </nav>
 
 <header class="hero" id="top">
-  <p class="eyebrow">Portafolio</p>
+  <p class="eyebrow">Analista de ventas · Tableros · Apps a medida</p>
   <h1>Caly Lucero<span class="punto">.</span></h1>
   <div class="cota" aria-hidden="true"></div>
-  <p class="lead">Software a medida. Apps web, PWAs y prototipos que podés <mark>tocar y probar</mark> acá mismo, sin instalar nada.</p>
+  <p class="lead">Hago el dato y la app, <span class="resalta">de punta a punta</span>: reportes y tableros de ventas para pymes, para que sepas cómo viene el mes sin esperar a que alguien arme el Excel.</p>
+  <div class="acciones">
+    <a class="btn" href="#contacto">Pedí un diagnóstico gratis de tus ventas</a>
+    <a class="cue" href="#laminas">Ver los proyectos <span aria-hidden="true">↓</span></a>
+  </div>
   <ol class="indice" id="indice" aria-label="Índice de proyectos"></ol>
-  <a class="cue" href="#laminas">Ver los proyectos <span aria-hidden="true">↓</span></a>
+  <ul class="cifras" aria-label="El sistema de ventas que armé en mi trabajo, en números">
+    <li><strong>≈ 2 millones</strong><span>de líneas de venta procesadas</span></li>
+    <li><strong>Cada hora</strong><span>datos actualizados en horario laboral</span></li>
+    <li><strong>+ de 20</strong><span>pantallas según el rol de cada persona</span></li>
+    <li><strong>Con tope</strong><span>de gasto y alertas de costo en la nube</span></li>
+  </ul>
 </header>
 
-<main id="laminas"></main>
+<section class="seccion" id="servicios" aria-labelledby="h-servicios">
+  <p class="eyebrow">Qué hago</p>
+  <h2 id="h-servicios">Servicios</h2>
+  <p class="intro">Para distribuidoras, comercios, inmobiliarias y pymes que hoy llevan las ventas en planillas o en un sistema que no les da respuestas rápidas.</p>
+  <div class="tarjetas">
+    <article class="tarjeta">
+      <h3>Tableros y reportes de ventas</h3>
+      <p>Una pantalla clara con lo que importa: venta del mes contra el anterior, avance contra objetivo, clientes que compran y los que dejaron de comprar, ranking por vendedor o por producto.</p>
+    </article>
+    <article class="tarjeta">
+      <h3>Automatización de reportes</h3>
+      <p>Los números se actualizan solos desde tu sistema o tus planillas. Se terminan las copias a mano, las versiones cruzadas y el «¿cuál es el archivo bueno?».</p>
+    </article>
+    <article class="tarjeta">
+      <h3>Apps y PWAs a medida</h3>
+      <p>Aplicaciones que se instalan en el celular y funcionan también sin conexión: cada persona entra con su usuario y ve solo lo que le corresponde.</p>
+    </article>
+  </div>
+  <ol class="pasos" aria-label="Cómo empezamos">
+    <li><b>1. Diagnóstico gratis.</b> Me contás cómo llevás las ventas hoy y qué te gustaría ver de un vistazo.</li>
+    <li><b>2. Prototipo.</b> Armo un tablero de ejemplo para que lo veas y lo toques antes de decidir.</li>
+    <li><b>3. Puesta en marcha.</b> Conecto tus datos reales, lo dejo funcionando y te lo explico.</li>
+  </ol>
+</section>
+
+<section class="seccion" id="proyectos" aria-labelledby="h-proyectos">
+  <p class="eyebrow">Proyectos</p>
+  <h2 id="h-proyectos">Probalos acá mismo</h2>
+  <p class="intro">Cada lámina es una demo en vivo. Tocá «Tocar para probar» y usala como si estuviera en tu celular o tu computadora.</p>
+</section>
+
+<main id="laminas">
+  <noscript>
+    <article class="lamina in">
+      <div class="spec">
+        <h2>Proyectos (para verlos en vivo se necesita JavaScript)</h2>
+        <p><b>Tablero de ventas.</b> Tablero interactivo con datos ficticios de tres rubros. <a href="demos/tablero/">Abrir</a></p>
+        <p><b>Vela.</b> App de indicadores comerciales por rol, instalable en el celular. <a href="demos/vela/">Abrir demo</a></p>
+        <p><b>Presupuestador.</b> Presupuestos en PDF para compartir por WhatsApp, sin conexión. <a href="https://caly-lucero.github.io/presupuestos/?demo=1">Abrir demo</a></p>
+        <p><b>ML Electricista.</b> Sitio de trabajos de un electricista, pensado para el celular. <a href="https://caly-lucero.github.io/MLelectricista/">Abrir sitio</a></p>
+      </div>
+    </article>
+  </noscript>
+</main>
+
+<section class="seccion" id="caso" aria-labelledby="h-caso">
+  <p class="eyebrow">Caso de estudio</p>
+  <h2 id="h-caso">De planillas de Excel a una app de ventas para toda una distribuidora</h2>
+  <div class="tarjetas tres">
+    <article class="tarjeta">
+      <h3>Qué necesitaba</h3>
+      <p>Un equipo comercial grande, con vendedores, supervisores, jefes y gerencia, que calculaba avance, cobro y cobertura de clientes en planillas separadas. Cada una con su versión de los números y su propio trabajo manual.</p>
+    </article>
+    <article class="tarjeta">
+      <h3>Qué hice</h3>
+      <p>Armé un sistema de datos propio en Google Cloud: baja las ventas del sistema de gestión cada hora, aplica las reglas del negocio en un solo lugar y deja cada reporte ya calculado. Encima, una app instalable (Vela) donde cada rol ve lo suyo.</p>
+    </article>
+    <article class="tarjeta">
+      <h3>Qué cambió</h3>
+      <p>Los números salen de una sola fuente y se actualizan solos cada hora. Cada persona ve solo lo que le corresponde. Se acabó el armado manual y se reemplazaron varias herramientas de reportes.</p>
+    </article>
+  </div>
+
+  <ol class="flujo" aria-label="Cómo viaja un dato, de la venta a la pantalla">
+    <li><b>ERP</b><span>La venta se carga y se baja por su API</span></li>
+    <li><b>raw</b><span>Se guarda tal cual llega</span></li>
+    <li><b>core</b><span>Datos limpios y reglas de negocio</span></li>
+    <li><b>mart</b><span>Cada reporte ya calculado</span></li>
+    <li><b>API con roles</b><span>Filtra qué ve cada persona</span></li>
+    <li><b>App (PWA)</b><span>La pantalla de cada rol</span></li>
+  </ol>
+
+  <ul class="chequeos">
+    <li><b>Validado contra los Excel de antes.</b> Los totales mensuales coinciden con una diferencia de −0,06 % y −0,10 % en las dos empresas, y el cálculo de cobro dio idéntico en 310 de 310 indicadores.</li>
+    <li><b>Cuidado del gasto.</b> Presupuesto con alertas, tope diario de consultas y tablas que exigen filtro por fecha.</li>
+    <li><b>Seguridad y orden.</b> Un usuario por persona con permisos por rol, claves con vencimiento, respaldo diario de lo que no se puede reconstruir y código versionado con ambientes de prueba antes de pasar a producción.</li>
+  </ul>
+</section>
+
+<section class="seccion" id="piezas" aria-labelledby="h-piezas">
+  <p class="eyebrow">Cómo está armado</p>
+  <h2 id="h-piezas">Las piezas del sistema, en palabras simples</h2>
+  <p class="intro">Esto es lo que hay detrás de la app del caso anterior. Están omitidos los nombres de la empresa y de las personas.</p>
+  <ul class="cifras" aria-label="El sistema en números">
+    <li><strong>5 jobs</strong><span>de carga automática de datos</span></li>
+    <li><strong>≈ 27</strong><span>programaciones horarias</span></li>
+    <li><strong>7 cuentas</strong><span>de servicio, cada una con lo mínimo</span></li>
+    <li><strong>30 días</strong><span>de historia en los respaldos diarios</span></li>
+  </ul>
+  <div class="tarjetas piezas">
+    <article class="tarjeta">
+      <h3>ERP y su API</h3>
+      <p>Es el sistema de gestión (ERP) donde se cargan las ventas. Un programa inicia sesión por su API y baja ventas, pedidos, clientes, artículos, precios y stock de las dos empresas. Lo que la API no entrega (acciones comerciales, combos, negociaciones) lo baja una PC con un navegador automatizado.</p>
+    </article>
+    <article class="tarjeta">
+      <h3>Jobs de carga y reloj</h3>
+      <p>Cinco jobs en Cloud Run: ventas (cada hora y un repaso de 7 días a la medianoche), stock, fuentes de Drive, capacitaciones y respaldo. Cloud Scheduler los dispara con unas 27 programaciones en horario argentino. Cargan solo lo nuevo o modificado y sacan lo que el ERP dejó de devolver.</p>
+    </article>
+    <article class="tarjeta">
+      <h3>Excel en Google Drive</h3>
+      <p>Lo que no está en el ERP (retiros, feriados, objetivos, tareas de campo) lo mantiene cada responsable en una carpeta de Drive. Un job lo revisa cada 20 minutos: si el contenido cambió lo valida y lo carga, y si hay un error avisa por mail con el detalle.</p>
+    </article>
+    <article class="tarjeta">
+      <h3>BigQuery en cuatro capas</h3>
+      <p><b>raw</b> guarda todo tal cual llega (17 tablas), <b>core</b> lo ordena y aplica las reglas del negocio en un solo lugar (80 tablas y vistas), <b>mart</b> tiene la lógica de cada reporte (77 vistas y 23 funciones) y <b>app</b> deja lo estándar ya calculado después de cada carga. Si algo se pierde, se reconstruye desde el ERP.</p>
+    </article>
+    <article class="tarjeta">
+      <h3>API con roles</h3>
+      <p>Un servicio en Cloud Run verifica quién es cada persona, decide qué le corresponde ver según una matriz de permisos (lo propio, la mesa, la empresa o todo) y entrega solo eso. Arma los Excel en el servidor y anota cada pedido para tener analíticas de uso y alertas de seguridad.</p>
+    </article>
+    <article class="tarjeta">
+      <h3>App, usuarios y datos propios</h3>
+      <p>La app (PWA) está en Firebase Hosting con una dirección fija. Firebase Authentication maneja una cuenta por persona, con clave que vence a los 90 días y cierre de sesión por inactividad. Lo que la gente escribe en la app (planificador, tickets, coaching) se guarda en Firestore, sin acceso directo desde afuera.</p>
+    </article>
+    <article class="tarjeta">
+      <h3>Claves y permisos</h3>
+      <p>Las credenciales del ERP viven en Secret Manager, no en los programas. Hay siete cuentas de servicio, cada una con solo los permisos que necesita (por ejemplo, la API no puede leer los datos crudos) y sin claves descargadas.</p>
+    </article>
+    <article class="tarjeta">
+      <h3>Respaldos y versiones</h3>
+      <p>Todos los días a las 04:30 se copia lo que no se puede reconstruir (tablas editadas en la app y Firestore) con 30 días de historia y alerta si falla. El código está en Git: cada cambio se prueba en una de tres copias de prueba y recién después pasa a producción, con vuelta atrás en un comando.</p>
+    </article>
+    <article class="tarjeta">
+      <h3>Costos y seguridad</h3>
+      <p>Presupuesto con alertas, tope diario de consultas, tablas que exigen filtro por fecha y límite de logs. En la app: dependencias fijadas y escaneadas, textos escapados, Excel sin fórmulas inyectadas y encabezados de seguridad.</p>
+    </article>
+  </div>
+</section>
+
+<section class="seccion" id="tecnologias" aria-labelledby="h-tec">
+  <p class="eyebrow">Con qué trabajo</p>
+  <h2 id="h-tec">Tecnologías</h2>
+  <dl class="tec">
+    <div><dt>Datos</dt><dd><span>BigQuery</span><span>SQL</span><span>Python</span><span>API de un ERP</span><span>Excel avanzado</span></dd></div>
+    <div><dt>Nube</dt><dd><span>Google Cloud</span><span>Cloud Run (jobs y servicios)</span><span>Cloud Scheduler</span><span>Secret Manager</span><span>Cloud Storage</span><span>Google Drive</span></dd></div>
+    <div><dt>Apps</dt><dd><span>JavaScript</span><span>PWA</span><span>Firebase (Auth, Hosting, Firestore)</span><span>HTML y CSS</span><span>Leaflet</span></dd></div>
+    <div><dt>Orden</dt><dd><span>Git</span><span>Roles y permisos</span><span>Respaldos</span><span>Control de costos</span></dd></div>
+  </dl>
+</section>
+
+<section class="seccion" id="sobre-mi" aria-labelledby="h-sobre">
+  <p class="eyebrow">Sobre mí</p>
+  <h2 id="h-sobre">Soy Caly</h2>
+  <div class="texto">
+    <p>Trabajo como analista de ventas en una distribuidora. En vez de esperar a que alguien armara los reportes, aprendí a construirlos: armé desde cero el sistema de datos y la app que hoy usa todo el equipo comercial.</p>
+    <p>Conozco el negocio desde adentro (cobertura de clientes, objetivos, cobro, preventa) y también sé llevarlo a una pantalla que se usa todos los días en el celular de quien vende. Esa es la diferencia: <b>hago el dato y la app, de punta a punta</b>.</p>
+  </div>
+</section>
+
+<section class="seccion contacto" id="contacto" aria-labelledby="h-contacto">
+  <p class="eyebrow">Contacto</p>
+  <h2 id="h-contacto">Pedí un diagnóstico gratis de tus ventas</h2>
+  <p class="intro">Contame cómo llevás hoy tus ventas (Excel, un sistema, un cuaderno) y qué te gustaría ver de un vistazo. Te respondo con qué se puede armar y cómo empezar. Sin costo y sin compromiso.</p>
+  <ul class="vias">
+    <li data-via="whatsapp"><a class="btn" href="https://wa.me/5491140838430?text=Hola%20Caly%2C%20vi%20tu%20portafolio%20y%20quiero%20pedir%20el%20diagn%C3%B3stico%20gratis%20de%20mis%20ventas." target="_blank" rel="noopener">Escribime por WhatsApp ↗</a></li>
+    <li data-via="linkedin"><a class="btn" href="https://www.linkedin.com/in/claudio-lucero-14a63110b" target="_blank" rel="noopener">Escribime por LinkedIn ↗</a></li>
+    <li><a class="btn sec" href="https://github.com/caly-lucero" target="_blank" rel="noopener">GitHub ↗</a></li>
+  </ul>
+</section>
 
 <footer class="titleblock" aria-label="Cajetín">
   <div class="tb-cell tb-wide"><small>Proyecto</small><strong>Portafolio</strong></div>
   <div class="tb-cell"><small>Dibujó</small><strong>Caly Lucero</strong></div>
   <div class="tb-cell"><small>Escala</small><strong>1:1 · en vivo</strong></div>
-  <div class="tb-cell"><small>Fecha</small><strong id="fecha">—</strong></div>
+  <div class="tb-cell"><small>Fecha</small><strong id="fecha">NOV 2026</strong></div>
   <div class="tb-cell"><small>Hoja</small><strong id="hoja">1 de 1</strong></div>
-  <p class="tb-note">Vela y el Presupuestador usan datos de ejemplo. ML Electricista es el sitio real y público de un cliente.</p>
+  <p class="tb-note">Vela y el Tablero usan datos ficticios y el Presupuestador, datos de ejemplo. ML Electricista es el sitio real y público de un cliente. «Plano» y «Papel» son dos estilos visuales de este sitio: el botón de arriba los cambia.</p>
+  <p class="tb-note tb-autor">© 2026 Caly Lucero · Analista de ventas y desarrollo de apps a medida · <a href="https://wa.me/5491140838430" rel="noopener">WhatsApp</a> · <a href="https://github.com/caly-lucero" rel="noopener">GitHub</a> · <a href="https://www.linkedin.com/in/claudio-lucero-14a63110b" rel="noopener">LinkedIn</a> · <a href="#contacto">Contacto</a></p>
 </footer>
 
-<script src="assets/proyectos.js?v=3"></script>
-<script src="assets/app.js?v=3"></script>
+<script src="assets/proyectos.js?v=6"></script>
+<script src="assets/app.js?v=6"></script>
 </body>
 </html>

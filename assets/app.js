@@ -95,7 +95,14 @@
     dl.append(fila("Tipo", p.tipo), fila("Stack", p.stack.join(" · ")), fila("Estado", p.estado));
     var abrir = el("a", "btn", "Abrir pantalla completa ↗");
     abrir.href = p.demo; abrir.target = "_blank"; abrir.rel = "noopener";
-    spec.append(el("h2", null, p.titulo), el("p", null, p.descripcion), dl, abrir);
+    var hojas = el("div", "ficha");
+    [["El problema", p.problema], ["Qué hace", p.hace], ["Resultado", p.resultado]].forEach(function (x) {
+      if (!x[1]) return;
+      var b = el("p", "ficha-item");
+      b.append(el("b", null, x[0]), document.createTextNode(x[1]));
+      hojas.append(b);
+    });
+    spec.append(el("h2", null, p.titulo), el("p", "resumen", p.descripcion), hojas, dl, abrir);
 
     body.append(stage, spec);
     art.append(head, body);
@@ -187,10 +194,10 @@
   /* lámina "próximamente" */
   var pronto = el("div", "pronto");
   var b = el("b", null, "Lámina " + pad2(total + 1));
-  pronto.append(b, document.createTextNode(" · en el tablero de dibujo"), el("i"));
+  pronto.append(b, document.createTextNode(" · en el tablero de dibujo, próximo proyecto"), el("i"));
   main.appendChild(pronto);
 
   /* cajetín */
   $("#hoja").textContent = "1 de 1";
-  $("#fecha").textContent = new Date().toLocaleDateString("es-AR", { day: "2-digit", month: "short", year: "numeric" }).replace(/\./g, "").toUpperCase();
+  $("#fecha").textContent = new Date().toLocaleDateString("es-AR", { month: "short", year: "numeric" }).replace(/\./g, "").replace(" de ", " ").toUpperCase();
 })();
