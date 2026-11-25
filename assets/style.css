@@ -97,6 +97,12 @@ h1 {
 .indice a:hover .t { color: var(--accent); }
 .acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 24px; margin-top: 28px; }
 .acciones .btn { margin: 0; }
+.cta-corto { display: none; }
+.recorridos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; max-width: 760px; margin-top: 22px; }
+.recorridos a { display: flex; flex-direction: column; gap: 3px; padding: 14px 16px; border: 1px solid var(--line2); border-radius: 6px; text-decoration: none; background: color-mix(in srgb, var(--ink) 2.5%, transparent); }
+.recorridos a:hover { border-color: var(--accent); }
+.recorridos span { font-weight: 700; }
+.recorridos small { font: 11px/1.4 var(--mono); color: var(--muted); }
 .btn.sec { background: transparent; color: var(--ink); border: 1px solid var(--line2); }
 .btn.sec:hover { border-color: var(--accent); color: var(--accent); filter: none; }
 .cifras { list-style: none; margin: 40px 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0; border: 1px solid var(--line2); border-radius: 6px; max-width: 760px; }
@@ -217,6 +223,22 @@ main { display: grid; gap: 48px; padding-bottom: 40px; }
 .texto { max-width: 680px; margin-top: 18px; color: var(--muted); font-size: 1.05rem; }
 .texto p { margin: 0 0 14px; }
 .texto b { color: var(--ink); }
+.sobre-destacado { padding-top: 32px; }
+.presentacion { display: grid; gap: 14px; max-width: 800px; margin-top: 18px; padding: 22px; border-left: 3px solid var(--accent); background: color-mix(in srgb, var(--ink) 2.5%, transparent); }
+.presentacion p { margin: 0; color: var(--muted); font-size: 1.05rem; }
+.presentacion .presentacion-principal { color: var(--ink); font-size: clamp(1.15rem, 2.2vw, 1.4rem); font-weight: 700; line-height: 1.4; }
+.presentacion b { color: var(--ink); }
+.detalle-tecnico { margin-top: 26px; border: 1px solid var(--line2); border-radius: 6px; overflow: clip; }
+.detalle-tecnico > summary { cursor: pointer; list-style: none; display: flex; flex-direction: column; gap: 3px; padding: 18px 20px; background: color-mix(in srgb, var(--ink) 2.5%, transparent); }
+.detalle-tecnico > summary::-webkit-details-marker { display: none; }
+.detalle-tecnico > summary::after { content: "+"; position: absolute; right: 36px; font: 700 1.4rem var(--mono); color: var(--accent); }
+.detalle-tecnico[open] > summary::after { content: "−"; }
+.detalle-tecnico > summary:hover { background: color-mix(in srgb, var(--accent) 7%, transparent); }
+.detalle-tecnico > summary span { font-weight: 700; }
+.detalle-tecnico > summary small { font: 11px/1.4 var(--mono); color: var(--muted); }
+.detalle-contenido { padding: 0 20px 24px; }
+.tecnologias { margin-top: 40px; }
+.tecnologias h3 { margin: 0; font-size: clamp(1.6rem, 4vw, 2.3rem); letter-spacing: -.03em; }
 .contacto { padding-bottom: 8px; }
 .vias { list-style: none; margin: 24px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 12px; }
 .vias .btn { display: inline-block; margin: 0; }
@@ -255,6 +277,13 @@ main { display: grid; gap: 48px; padding-bottom: 40px; }
   .spec { border-top: 0; border-left: 1px solid var(--line2); padding: 36px 32px; justify-content: center; }
   .titleblock { grid-template-columns: 2fr 1.2fr 1fr 1fr .8fr; }
   .tb-wide { grid-column: auto; }
+}
+@media (max-width: 520px) {
+  .cta-largo { display: none; }
+  .cta-corto { display: inline; }
+  .recorridos { grid-template-columns: 1fr; }
+  .recorridos a { padding: 12px 14px; }
+  .detalle-contenido { padding-left: 14px; padding-right: 14px; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

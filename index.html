@@ -23,7 +23,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=6">
+<link rel="stylesheet" href="assets/style.css?v=7">
 <script type="application/ld+json">
 { "@context": "https://schema.org", "@type": "Person", "name": "Caly Lucero",
   "jobTitle": "Analista de ventas y desarrollo de software a medida",
@@ -60,9 +60,13 @@
   <div class="cota" aria-hidden="true"></div>
   <p class="lead">Hago el dato y la app, <span class="resalta">de punta a punta</span>: reportes y tableros de ventas para pymes, para que sepas cómo viene el mes sin esperar a que alguien arme el Excel.</p>
   <div class="acciones">
-    <a class="btn" href="#contacto">Pedí un diagnóstico gratis de tus ventas</a>
+    <a class="btn cta-diagnostico" href="#contacto"><span class="cta-largo">Pedí un diagnóstico gratis de tus ventas</span><span class="cta-corto">Diagnóstico gratis</span></a>
     <a class="cue" href="#laminas">Ver los proyectos <span aria-hidden="true">↓</span></a>
   </div>
+  <nav class="recorridos" aria-label="Elegí qué querés conocer">
+    <a href="#servicios"><span>Necesito mejorar mis reportes</span><small>Servicios y forma de trabajo →</small></a>
+    <a href="#caso"><span>Quiero ver cómo está construido</span><small>Caso real y arquitectura →</small></a>
+  </nav>
   <ol class="indice" id="indice" aria-label="Índice de proyectos"></ol>
   <ul class="cifras" aria-label="El sistema de ventas que armé en mi trabajo, en números">
     <li><strong>≈ 2 millones</strong><span>de líneas de venta procesadas</span></li>
@@ -71,6 +75,15 @@
     <li><strong>Con tope</strong><span>de gasto y alertas de costo en la nube</span></li>
   </ul>
 </header>
+
+<section class="seccion sobre-destacado" id="sobre-mi" aria-labelledby="h-sobre">
+  <p class="eyebrow">Sobre mí</p>
+  <h2 id="h-sobre">Soy Caly</h2>
+  <div class="presentacion">
+    <p class="presentacion-principal">Soy analista de ventas y desarrollador. Construí desde cero el sistema de datos y la app que hoy usa todo el equipo comercial de una distribuidora.</p>
+    <p>Conozco el negocio desde adentro —objetivos, cobro, preventa y cobertura de clientes— y sé convertirlo en una pantalla útil para quien vende. Esa es mi diferencia: <b>hago el dato y la app, de punta a punta</b>.</p>
+  </div>
+</section>
 
 <section class="seccion" id="servicios" aria-labelledby="h-servicios">
   <p class="eyebrow">Qué hago</p>
@@ -155,6 +168,9 @@
   <p class="eyebrow">Cómo está armado</p>
   <h2 id="h-piezas">Las piezas del sistema, en palabras simples</h2>
   <p class="intro">Esto es lo que hay detrás de la app del caso anterior. Están omitidos los nombres de la empresa y de las personas.</p>
+  <details class="detalle-tecnico">
+    <summary><span>Ver arquitectura y tecnologías</span><small>Para perfiles técnicos y equipos de tecnología</small></summary>
+    <div class="detalle-contenido">
   <ul class="cifras" aria-label="El sistema en números">
     <li><strong>5 jobs</strong><span>de carga automática de datos</span></li>
     <li><strong>≈ 27</strong><span>programaciones horarias</span></li>
@@ -199,26 +215,18 @@
       <p>Presupuesto con alertas, tope diario de consultas, tablas que exigen filtro por fecha y límite de logs. En la app: dependencias fijadas y escaneadas, textos escapados, Excel sin fórmulas inyectadas y encabezados de seguridad.</p>
     </article>
   </div>
-</section>
-
-<section class="seccion" id="tecnologias" aria-labelledby="h-tec">
+  <div class="tecnologias" id="tecnologias" aria-labelledby="h-tec">
   <p class="eyebrow">Con qué trabajo</p>
-  <h2 id="h-tec">Tecnologías</h2>
+  <h3 id="h-tec">Tecnologías</h3>
   <dl class="tec">
     <div><dt>Datos</dt><dd><span>BigQuery</span><span>SQL</span><span>Python</span><span>API de un ERP</span><span>Excel avanzado</span></dd></div>
     <div><dt>Nube</dt><dd><span>Google Cloud</span><span>Cloud Run (jobs y servicios)</span><span>Cloud Scheduler</span><span>Secret Manager</span><span>Cloud Storage</span><span>Google Drive</span></dd></div>
     <div><dt>Apps</dt><dd><span>JavaScript</span><span>PWA</span><span>Firebase (Auth, Hosting, Firestore)</span><span>HTML y CSS</span><span>Leaflet</span></dd></div>
     <div><dt>Orden</dt><dd><span>Git</span><span>Roles y permisos</span><span>Respaldos</span><span>Control de costos</span></dd></div>
   </dl>
-</section>
-
-<section class="seccion" id="sobre-mi" aria-labelledby="h-sobre">
-  <p class="eyebrow">Sobre mí</p>
-  <h2 id="h-sobre">Soy Caly</h2>
-  <div class="texto">
-    <p>Trabajo como analista de ventas en una distribuidora. En vez de esperar a que alguien armara los reportes, aprendí a construirlos: armé desde cero el sistema de datos y la app que hoy usa todo el equipo comercial.</p>
-    <p>Conozco el negocio desde adentro (cobertura de clientes, objetivos, cobro, preventa) y también sé llevarlo a una pantalla que se usa todos los días en el celular de quien vende. Esa es la diferencia: <b>hago el dato y la app, de punta a punta</b>.</p>
   </div>
+    </div>
+  </details>
 </section>
 
 <section class="seccion contacto" id="contacto" aria-labelledby="h-contacto">
@@ -243,6 +251,6 @@
 </footer>
 
 <script src="assets/proyectos.js?v=6"></script>
-<script src="assets/app.js?v=6"></script>
+<script src="assets/app.js?v=7"></script>
 </body>
 </html>
